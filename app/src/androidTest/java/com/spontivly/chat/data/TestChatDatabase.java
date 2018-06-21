@@ -24,6 +24,7 @@ import static com.spontivly.chat.data.TestUtilities.getStaticIntegerField;
 import static com.spontivly.chat.data.TestUtilities.getStaticStringField;
 import static com.spontivly.chat.data.TestUtilities.studentReadableClassNotFound;
 import static com.spontivly.chat.data.TestUtilities.studentReadableNoSuchField;
+import static com.spontivly.chat.data.ChatContract.EventChatEntry.TABLE_NAME;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotSame;
@@ -46,86 +47,59 @@ import static junit.framework.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class TestChatDatabase {
     /*
-     * Context used to perform operations on the database and create WeatherDbHelpers.
+     * Context used to perform operations on the database and create ChatDbHelpers.
      */
     private final Context context = InstrumentationRegistry.getTargetContext();
 
-    private static final String packageName = "com.spontivly.chat";
-    private static final String dataPackageName = packageName + ".data";
-
-    private Class weatherEntryClass;
-    private Class weatherDbHelperClass;
-    private static final String weatherContractName = ".WeatherContract";
-    private static final String weatherEntryName = weatherContractName + "$WeatherEntry";
-    private static final String weatherDbHelperName = ".WeatherDbHelper";
 
     private SQLiteDatabase database;
     private SQLiteOpenHelper dbHelper;
 
-
-    /**
-     * This method tests that our database contains all of the tables that we think it should
-     * contain. Although in our case, we just have one table that we expect should be added
-     * <p>
-     * {@link com.spontivly.chat.data.ChatContract.EventChatEntry#TABLE_NAME}.
-     * <p>
-     * Despite only needing to check one table name in Sunshine, we set this method up so that
-     * you can use it in other apps to test databases with more than one table.
-     */
-    @Test
-    public void testCreateDb() {
+    @Before
+    public void before() {
         /*
-         * Will contain the name of every table in our database. Even though in our case, we only
-         * have only table, in many cases, there are multiple tables. Because of that, we are
-         * showing you how to test that a database with multiple tables was created properly.
-         */
-        final HashSet<String> tableNameHashSet = new HashSet<>();
+        try {
 
-        /* Here, we add the name of our only table in this particular database */
-        tableNameHashSet.add(REFLECTED_TABLE_NAME);
-        /* Students, here is where you would add any other table names if you had them */
-//        tableNameHashSet.add(MyAwesomeSuperCoolTableName);
-//        tableNameHashSet.add(MyOtherCoolTableNameThatContainsOtherCoolData);
 
-        /* We think the database is open, let's verify that here */
-        String databaseIsNotOpen = "The database should be open and isn't";
-        assertEquals(databaseIsNotOpen,
-                true,
-                database.isOpen());
+            REFLECTED_DATABASE_NAME = getStaticStringField(
+                    weatherDbHelperClass, databaseNameVariableName);
 
-        /* This Cursor will contain the names of each table in our database */
-        Cursor tableNameCursor = database.rawQuery(
-                "SELECT name FROM sqlite_master WHERE type='table'",
-                null);
+            REFLECTED_DATABASE_VERSION = getStaticIntegerField(
+                    weatherDbHelperClass, databaseVersionVariableName);
 
-        /*
-         * If tableNameCursor.moveToFirst returns false from this query, it means the database
-         * wasn't created properly. In actuality, it means that your database contains no tables.
-         */
-        String errorInCreatingDatabase =
-                "Error: This means that the database has not been created correctly";
-        assertTrue(errorInCreatingDatabase,
-                tableNameCursor.moveToFirst());
+            int expectedDatabaseVersion = 1;
+            String databaseVersionShouldBe1 = "Database version should be "
+                    + expectedDatabaseVersion + " but isn't.";
 
-        /*
-         * tableNameCursor contains the name of each table in this database. Here, we loop over
-         * each table that was ACTUALLY created in the database and remove it from the
-         * tableNameHashSet to keep track of the fact that was added. At the end of this loop, we
-         * should have removed every table name that we thought we should have in our database.
-         * If the tableNameHashSet isn't empty after this loop, there was a table that wasn't
-         * created properly.
-         */
-        do {
-            tableNameHashSet.remove(tableNameCursor.getString(0));
-        } while (tableNameCursor.moveToNext());
+            assertEquals(databaseVersionShouldBe1,
+                    expectedDatabaseVersion,
+                    REFLECTED_DATABASE_VERSION);
 
-        /* If this fails, it means that your database doesn't contain the expected table(s) */
-        assertTrue("Error: Your database was created without the expected tables.",
-                tableNameHashSet.isEmpty());
+            Constructor weatherDbHelperCtor = weatherDbHelperClass.getConstructor(Context.class);
 
-        /* Always close the cursor when you are finished with it */
-        tableNameCursor.close();
+            dbHelper = (SQLiteOpenHelper) weatherDbHelperCtor.newInstance(context);
+
+            context.deleteDatabase(REFLECTED_DATABASE_NAME);
+
+            Method getWritableDatabase = SQLiteOpenHelper.class.getDeclaredMethod("getWritableDatabase");
+            database = (SQLiteDatabase) getWritableDatabase.invoke(dbHelper);
+
+        } catch (ClassNotFoundException e) {
+            fail(studentReadableClassNotFound(e));
+        } catch (NoSuchFieldException e) {
+            fail(studentReadableNoSuchField(e));
+        } catch (IllegalAccessException e) {
+            fail(e.getMessage());
+        } catch (NoSuchMethodException e) {
+            fail(e.getMessage());
+        } catch (InstantiationException e) {
+            fail(e.getMessage());
+        } catch (InvocationTargetException e) {
+            fail(e.getMessage());
+        }
+        */
     }
+
 
     /**
      * This method tests inserting a single record into an empty table from a brand new database.
@@ -144,7 +118,7 @@ public class TestChatDatabase {
 
         /* Insert ContentValues into database and get a row ID back */
         long weatherRowId = database.insert(
-                REFLECTED_TABLE_NAME,
+                TABLE_NAME,
                 null,
                 testWeatherValues);
 
@@ -159,9 +133,9 @@ public class TestChatDatabase {
          * Query the database and receive a Cursor. A Cursor is the primary way to interact with
          * a database in Android.
          */
-        Cursor weatherCursor = database.query(
+        Cursor chatCursor = database.query(
                 /* Name of table on which to perform the query */
-                REFLECTED_TABLE_NAME,
+                TABLE_NAME,
                 /* Columns; leaving this null returns every column in the table */
                 null,
                 /* Optional specification for columns in the "where" clause above */
@@ -176,15 +150,15 @@ public class TestChatDatabase {
                 null);
 
         /* Cursor.moveToFirst will return false if there are no records returned from your query */
-        String emptyQueryError = "Error: No Records returned from weather query";
+        String emptyQueryError = "Error: No Records returned from chat query";
         assertTrue(emptyQueryError,
-                weatherCursor.moveToFirst());
+                chatCursor.moveToFirst());
 
         /* Verify that the returned results match the expected results */
         String expectedWeatherDidntMatchActual =
-                "Expected weather values didn't match actual values.";
+                "Expected chat values didn't match actual values.";
         TestUtilities.validateCurrentRecord(expectedWeatherDidntMatchActual,
-                weatherCursor,
+                chatCursor,
                 testWeatherValues);
 
         /*
@@ -193,11 +167,11 @@ public class TestChatDatabase {
          * Weather table because we inserted it. If there is more than one record, an issue has
          * occurred.
          */
-        assertFalse("Error: More than one record returned from weather query",
-                weatherCursor.moveToNext());
+        assertFalse("Error: More than one record returned from chat query",
+                chatCursor.moveToNext());
 
         /* Close cursor */
-        weatherCursor.close();
+        chatCursor.close();
     }
 
 }
