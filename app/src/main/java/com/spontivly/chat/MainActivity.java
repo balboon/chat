@@ -12,8 +12,10 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.spontivly.chat.models.SpontivlyEvent;
 import com.spontivly.chat.models.SpontivlyEventChat;
 import com.spontivly.chat.models.SpontivlyEventChatMessage;
+import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
 
 import java.util.ArrayList;
@@ -66,19 +68,38 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        dbService.getEventChat(313, new DatabaseService.GetEventChatCallback() {
+//        dbService.getEventChat(313, new DatabaseService.GetEventChatCallback() {
+//            @Override
+//            public void callback(SpontivlyEventChat eventChat) {
+//                SpontivlyEventChatMessage last = eventChat.lastPostedMessage;
+//                if (last != null) {
+//                    textView.append("Last chat message:\n" + last.toString() + "\n" +
+//                        "Number of chat messages: " + eventChat.chatMessages.size());
+//                }
+//                else {
+//                    textView.append("No chat messages");
+//                }
+//            }
+//        });
+
+//        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
+//            @Override
+//            public void callback(SpontivlyUser user) {
+//                textView.append(user.userId + "\n" +
+//                user.firstName + " " + user.lastName + "\n" +
+//                user.email);
+//            }
+//        });
+
+        dbService.getChatEvents(new DatabaseService.GetActiveCallback() {
             @Override
-            public void callback(SpontivlyEventChat eventChat) {
-                SpontivlyEventChatMessage last = eventChat.lastPostedMessage;
-                if (last != null) {
-                    textView.append("Last chat message:\n" + last.toString() + "\n" +
-                        "Number of chat messages: " + eventChat.chatMessages.size());
-                }
-                else {
-                    textView.append("No chat messages");
+            public void callback(ArrayList<SpontivlyEvent> response) {
+                for (SpontivlyEvent event : response) {
+                    textView.append(event.eventId + ": " + event.title + "\n\n");
                 }
             }
         });
+
     }
 
 }

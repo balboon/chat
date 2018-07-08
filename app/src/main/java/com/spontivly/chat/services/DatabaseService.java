@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -302,6 +303,30 @@ public class DatabaseService {
     }
 
     ///////////////////////////////////////////////////////////////////////
+    // FETCH ACTIVE CHAT EVENTS - FOR CHAT TESTING
+    ///////////////////////////////////////////////////////////////////////
+    public void getChatEvents(final GetActiveCallback callback){
+
+        String url = chatBaseApiUrl + "api=getChatEvents";
+
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    public void onResponse(JSONArray response) {
+                        //Parse events
+                        final ArrayList<SpontivlyEvent> events = parseEventsFromJson(response);
+
+                        if(callback != null){ callback.callback(events); }
+                    }
+                },
+                new Response.ErrorListener(){
+                    public void onErrorResponse(VolleyError error){
+                        Log.e("Spontivly", Log.getStackTraceString(error));
+                    }
+                });
+        netRequests.add(jsObjRequest);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
     // POST/UPDATE EVENT CHAT
     ///////////////////////////////////////////////////////////////////////
     public void postEventChatMessage(SpontivlyEventChatMessage msg, final UpdateEventChatCallback callback) {
@@ -418,17 +443,13 @@ public class DatabaseService {
         Log.e("getUserInfo", url);
 //        }
         //AppUtils.Toast("get " + url);
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    public void onResponse(JSONArray response) {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    public void onResponse(JSONObject response) {
                         SpontivlyUser user = new SpontivlyUser();
                         user.userId = userId;
                         if (response.length() > 0) {
-                            try {
-                                user = parseUserFromJson(response.getJSONObject(0), "userId");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                                user = parseUserFromJson(response, "userId");
                         }
 
                         callback.callback(user);
@@ -536,6 +557,42 @@ public class DatabaseService {
             e.printStackTrace();
         }
         return user;
+    }
+
+    private ArrayList<SpontivlyEvent> parseEventsFromJson(JSONArray response) {
+        ArrayList<SpontivlyEvent> events = new ArrayList<>();
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    JSONObject jsonobject = response.getJSONObject(i);
+                    //Create event data object
+                    SpontivlyEvent e = new SpontivlyEvent();
+                    e.eventId = jsonobject.getInt("eventId");
+                    e.typeId = jsonobject.getInt("typeId");
+                    e.title = dec(jsonobject.getString("title"));
+                    e.desc = dec(jsonobject.getString("description"));
+                    e.address = dec(jsonobject.getString("address"));
+                    e.startTime = jsonobject.getLong("startTime");
+                    if(e.startTime == -1){
+                        e.startTime = (long) (System.currentTimeMillis() * .001) - (60 * 15);
+                    }
+                    e.endTime = jsonobject.getLong("endTime");
+                    if(e.endTime == -1){
+                        e.endTime = (long) (System.currentTimeMillis() * .001) + (60 * 60);
+                    }
+                    e.hasOwnerArrived = jsonobject.getInt("hasOwnerArrived") == 1;
+                    e.maxUsers = jsonobject.getInt("maxUsers");
+                    e.isPrivate = jsonobject.getInt("isPrivate") == 1;
+                    e.showOwnerPhone = jsonobject.getInt("showOwnerPhone") == 1;
+                    e.setPos(new LatLng(jsonobject.getDouble("lat"), jsonobject.getDouble("lng")));
+
+                    events.add(e);
+
+                } catch (JSONException e) { e.printStackTrace(); }
+            }
+        } catch (Exception e){ Log.e("Spontivly", Log.getStackTraceString(e)); }
+
+        return events;
     }
 
     private ArrayList<SpontivlyEventChatMessage> parseEventChatMessages(JSONArray response) {
