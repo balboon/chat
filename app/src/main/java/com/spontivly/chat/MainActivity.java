@@ -40,18 +40,18 @@ public class MainActivity extends AppCompatActivity {
         // dbService.netRequests = netRequests;
         dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
-        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
-            @Override
-            public void callback(SpontivlyUser user) {
-                user1 = user;
-            }
-        });
-        dbService.getUserInfo(24, new DatabaseService.GetUserInfoCallback() {
-            @Override
-            public void callback(SpontivlyUser user) {
-                user2 = user;
-            }
-        });
+//        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
+//            @Override
+//            public void callback(SpontivlyUser user) {
+//                user1 = user;
+//            }
+//        });
+//        dbService.getUserInfo(24, new DatabaseService.GetUserInfoCallback() {
+//            @Override
+//            public void callback(SpontivlyUser user) {
+//                user2 = user;
+//            }
+//        });
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         user1Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(1);
+                login(25);
             }
         });
 
@@ -70,21 +70,31 @@ public class MainActivity extends AppCompatActivity {
         user2Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(2);
+                login(24);
             }
         });
     }
 
     public void login(int userId) {
-        final Intent intent = new Intent(this, EventActivity.class);
+//        final Intent intent = new Intent(this, EventActivity.class);
+//
+//        if (userId == 1) {
+//            intent.putExtra("User", user1);
+//        }
+//        else if (userId == 2) {
+//            intent.putExtra("User", user2);
+//        }
+//
+//        startActivity(intent);
 
-        if (userId == 1) {
-            intent.putExtra("User", user1);
-        }
-        else if (userId == 2) {
-            intent.putExtra("User", user2);
-        }
-
-        startActivity(intent);
+        dbService.getUserInfo(userId, new DatabaseService.GetUserInfoCallback() {
+            @Override
+            public void callback(SpontivlyUser user) {
+                final Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                intent.putExtra("User", user);
+                MainActivity.this.startActivity(intent);
+                finish();
+            }
+        });
     }
 }

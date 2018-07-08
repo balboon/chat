@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "293137649886",
+    "firebase_url": "https://spontivly-chat.firebaseio.com",
+    "project_id": "spontivly-chat",
+    "storage_bucket": "spontivly-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293137649886:android:01ffd85faf5b9cda",
+        "android_client_info": {
+          "package_name": "com.spontivly.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293137649886-h72tt1kmsbjb9ugifa5408g784bhcdje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spontivly.chat",
+            "certificate_hash": "84439d0b869ee603d629dee36959771e621c6e19"
+          }
+        },
+        {
+          "client_id": "293137649886-fllfpqhelb39b64q0k5banjpb92gf6ae.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "293137649886-fllfpqhelb39b64q0k5banjpb92gf6ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_tEQDKv26PW6W6yYKg28-Oz0OCKybOWM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293137649886-fllfpqhelb39b64q0k5banjpb92gf6ae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
