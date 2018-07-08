@@ -19,6 +19,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.spontivly.chat.models.SpontivlyEventChat;
 import com.spontivly.chat.services.DatabaseService;
+import com.spontivly.chat.services.VolleyController;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -30,13 +31,13 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         // Init database services
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-        Network network = new BasicNetwork(new HurlStack());
-        RequestQueue netRequests = new RequestQueue(cache, network);
-        netRequests.start();
+//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+//        Network network = new BasicNetwork(new HurlStack());
+//        RequestQueue netRequests = new RequestQueue(cache, network);
+//        netRequests.start();
 
         dbService = new DatabaseService();
-        dbService.netRequests = netRequests;
+        dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
         Intent intent = getIntent();
         int mImageView = intent.getIntExtra("imageID", 0);
@@ -64,7 +65,8 @@ public class MessageActivity extends AppCompatActivity {
         dbService.getEventChat(new Integer(eventId).intValue(), new DatabaseService.GetEventChatCallback() {
             @Override
             public void callback(SpontivlyEventChat eventChat) {
-                Log.i("Spontivly", eventChat.lastPostedMessage.toString());
+                if (eventChat.lastPostedMessage != null)
+                    Log.i("Spontivly", eventChat.lastPostedMessage.toString());
             }
         });
     }

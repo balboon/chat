@@ -24,6 +24,7 @@ import com.android.volley.toolbox.HurlStack;
 import com.spontivly.chat.models.SpontivlyEvent;
 import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
+import com.spontivly.chat.services.VolleyController;
 
 import java.util.ArrayList;
 
@@ -42,14 +43,8 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        // Init database services
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-        Network network = new BasicNetwork(new HurlStack());
-        RequestQueue netRequests = new RequestQueue(cache, network);
-        netRequests.start();
-
         dbService = new DatabaseService();
-        dbService.netRequests = netRequests;
+        dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
         Intent intent = getIntent();
         user = (SpontivlyUser) intent.getSerializableExtra("User");
