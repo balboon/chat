@@ -2,9 +2,10 @@ package com.spontivly.chat.models;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SpontivlyEvent {
+public class SpontivlyEvent implements Serializable{
 
     public ArrayList<SpontivlyUser> joinedUsers = new ArrayList<>();
 

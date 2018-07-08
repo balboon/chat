@@ -2,10 +2,11 @@ package com.spontivly.chat.models;
 
 import com.spontivly.chat.utils.TextUtils;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SpontivlyUser {
+public class SpontivlyUser implements Serializable{
 
 
     public SpontivlyUser(){}

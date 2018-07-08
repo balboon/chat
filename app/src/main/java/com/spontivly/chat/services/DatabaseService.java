@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.utils.AppUtils;
 import com.spontivly.chat.utils.TextUtils;
 
-public class DatabaseService {
+public class DatabaseService implements Serializable{
 
     public ArrayList<Integer> ignoredEventTypes = new ArrayList<>();
 

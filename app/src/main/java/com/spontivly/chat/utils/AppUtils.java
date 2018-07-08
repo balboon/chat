@@ -222,7 +222,7 @@ public class AppUtils {
             Bitmap pinBitmap = resizeBitmap(isActivated ? (isMyPin ? "finalpin_base_mine" : "finalpin_base") : "finalpin_base_grey", scale);
             //pinBitmap = resizeBitmap("finalpin_base", scale);
 
-            int iconResourceId = 0;//MainActivity.model.getEventType(typeId).icon;
+            int iconResourceId = 0;//TestActivity.model.getEventType(typeId).icon;
             Bitmap iconBitmap = BitmapFactory.decodeResource(appContext.getResources(), iconResourceId);
             iconBitmap = resizeBitmap(iconBitmap, scale * .52f);
             iconBitmap = tintImage(iconBitmap, 0xFF000000);

@@ -1,8 +1,13 @@
 package com.spontivly.chat;
 
+import android.content.Intent;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -10,96 +15,74 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.spontivly.chat.models.SpontivlyEvent;
-import com.spontivly.chat.models.SpontivlyEventChat;
-import com.spontivly.chat.models.SpontivlyEventChatMessage;
 import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
-
-    TextView textView;
-    private DatabaseReference mDatabase;
-    public static RequestQueue netRequests;
-    public static DatabaseService dbService;
+    private Button user1Btn;
+    private Button user2Btn;
+    private static DatabaseService dbService;
+    private SpontivlyUser user1, user2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView)findViewById(R.id.tv_chat_data);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // Init database services
         Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
         Network network = new BasicNetwork(new HurlStack());
         RequestQueue netRequests = new RequestQueue(cache, network);
         netRequests.start();
 
-        DatabaseService dbService = new DatabaseService();
+        dbService = new DatabaseService();
         dbService.netRequests = netRequests;
 
-//        SpontivlyEventChatMessage msg = new SpontivlyEventChatMessage();
-//        msg.eventId = 313;
-//        msg.posterId = 24;
-//        msg.postedMessage = "I'm the greatest ever GOAT";
-//        msg.createdAt = 21234567;
-//
-//        textView.append(msg.toString());
-
-//        dbService.postEventChatMessage(msg, new DatabaseService.UpdateEventChatCallback() {
-//            @Override
-//            public void callback(int messageId) {
-//                textView.append("Message posted: " + messageId);
-//            }
-//        });
-
-//        dbService.getEventChatMessages(313, 12346579, new DatabaseService.GetEventChatMessagesCallback() {
-//            @Override
-//            public void callback(ArrayList<SpontivlyEventChatMessage> response) {
-//                if (!response.isEmpty()) {
-//                    for (SpontivlyEventChatMessage msg : response) {
-//                        textView.append("\n" + msg.toString());
-//                    }
-//                }
-//            }
-//        });
-
-//        dbService.getEventChat(313, new DatabaseService.GetEventChatCallback() {
-//            @Override
-//            public void callback(SpontivlyEventChat eventChat) {
-//                SpontivlyEventChatMessage last = eventChat.lastPostedMessage;
-//                if (last != null) {
-//                    textView.append("Last chat message:\n" + last.toString() + "\n" +
-//                        "Number of chat messages: " + eventChat.chatMessages.size());
-//                }
-//                else {
-//                    textView.append("No chat messages");
-//                }
-//            }
-//        });
-
-//        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
-//            @Override
-//            public void callback(SpontivlyUser user) {
-//                textView.append(user.userId + "\n" +
-//                user.firstName + " " + user.lastName + "\n" +
-//                user.email);
-//            }
-//        });
-
-        dbService.getChatEvents(new DatabaseService.GetActiveCallback() {
+        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
             @Override
-            public void callback(ArrayList<SpontivlyEvent> response) {
-                for (SpontivlyEvent event : response) {
-                    textView.append(event.eventId + ": " + event.title + "\n\n");
-                }
+            public void callback(SpontivlyUser user) {
+                user1 = user;
+            }
+        });
+        dbService.getUserInfo(24, new DatabaseService.GetUserInfoCallback() {
+            @Override
+            public void callback(SpontivlyUser user) {
+                user2 = user;
             }
         });
 
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Spontivly - MainActivity");
+        setSupportActionBar(toolbar);
+
+        user1Btn = findViewById(R.id.user1);
+        user1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login(1);
+            }
+        });
+
+        user2Btn = findViewById(R.id.user2);
+        user2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login(2);
+            }
+        });
     }
 
+    public void login(int userId) {
+        final Intent intent = new Intent(this, EventActivity.class);
+
+        if (userId == 1) {
+            intent.putExtra("User", user1);
+        }
+        else if (userId == 2) {
+            intent.putExtra("User", user2);
+        }
+
+        startActivity(intent);
+    }
 }
