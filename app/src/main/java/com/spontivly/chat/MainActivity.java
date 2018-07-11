@@ -23,36 +23,14 @@ public class MainActivity extends AppCompatActivity {
     private Button user1Btn;
     private Button user2Btn;
     private static DatabaseService dbService;
-    private SpontivlyUser user1, user2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Init database services
-//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-//        Network network = new BasicNetwork(new HurlStack());
-//        RequestQueue netRequests = new RequestQueue(cache, network);
-//        netRequests.start();
-
         dbService = new DatabaseService();
-        // dbService.netRequests = netRequests;
         dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
-
-//        dbService.getUserInfo(25, new DatabaseService.GetUserInfoCallback() {
-//            @Override
-//            public void callback(SpontivlyUser user) {
-//                user1 = user;
-//            }
-//        });
-//        dbService.getUserInfo(24, new DatabaseService.GetUserInfoCallback() {
-//            @Override
-//            public void callback(SpontivlyUser user) {
-//                user2 = user;
-//            }
-//        });
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Spontivly - MainActivity");
@@ -76,16 +54,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(int userId) {
-//        final Intent intent = new Intent(this, EventActivity.class);
-//
-//        if (userId == 1) {
-//            intent.putExtra("User", user1);
-//        }
-//        else if (userId == 2) {
-//            intent.putExtra("User", user2);
-//        }
-//
-//        startActivity(intent);
 
         dbService.getUserInfo(userId, new DatabaseService.GetUserInfoCallback() {
             @Override

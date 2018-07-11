@@ -48,11 +48,9 @@ public class EventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         user = (SpontivlyUser) intent.getSerializableExtra("User");
-//        String username = intent.getStringExtra("User");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Spontivly - Events for " + user.firstName + " " + user.lastName);
-//        toolbar.setTitle("Spontivly - Events for " + username);
+        toolbar.setTitle("Events for " + user.firstName + " " + user.lastName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -125,6 +123,7 @@ public class EventActivity extends AppCompatActivity {
         intent.putExtra("imageID", image);
         intent.putExtra("eventId", events.get(position).eventId);
         intent.putExtra("eventTitle", events.get(position).title);
+        intent.putExtra("User", this.user);
 
         startActivity(intent);
     }
