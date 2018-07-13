@@ -18,12 +18,17 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.spontivly.chat.models.SpontivlyEventChat;
+import com.spontivly.chat.models.SpontivlyEventChatMessage;
+import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
 import com.spontivly.chat.services.VolleyController;
+
+import java.util.Date;
 
 public class MessageActivity extends AppCompatActivity {
 
     private DatabaseService dbService;
+    private SpontivlyUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class MessageActivity extends AppCompatActivity {
         int mImageView = intent.getIntExtra("imageID", 0);
         int eventId = intent.getIntExtra("eventId", 0);
         String eventTitle = intent.getStringExtra("eventTitle");
+        this.user = (SpontivlyUser) intent.getSerializableExtra("User");
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,11 +68,24 @@ public class MessageActivity extends AppCompatActivity {
             // Implement this feature without material design
         }
 
-        dbService.getEventChat(new Integer(eventId).intValue(), new DatabaseService.GetEventChatCallback() {
+        dbService.getEventChat(eventId, new DatabaseService.GetEventChatCallback() {
             @Override
             public void callback(SpontivlyEventChat eventChat) {
                 if (eventChat.lastPostedMessage != null)
                     Log.i("Spontivly", eventChat.lastPostedMessage.toString());
+                // Load event chat
+                for (SpontivlyEventChatMessage msg : eventChat.chatMessages) {
+                    Date postDate = new Date(msg.createdAt * 1000);
+                    // Check if msg was written by user and place accordingly
+                    if (msg.posterId == user.userId) {
+                        // Place on right side with time only
+                        Log.i("Spontivly", "Me: " + postDate.toString() + "," + msg.postedMessage);
+                    } else {
+                        // Place on left side with poster name and time
+                        Log.i("Spontivly", msg.posterFirstName + " "  +
+                                msg.posterLastName + ": " + postDate.toString() + "," + msg.postedMessage);
+                    }
+                }
             }
         });
     }

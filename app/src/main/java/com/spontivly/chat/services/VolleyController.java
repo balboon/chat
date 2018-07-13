@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 
 public class VolleyController    {
@@ -29,6 +30,8 @@ public class VolleyController    {
             // getApplicationContext() is key. It should not be activity context,
             // or else RequestQueue won't last for the lifetime of your app
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
+//            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(),
+//                    new HurlStack(null, ClientSSLSocketFactory.getSocketFactory()));
         }
         return mRequestQueue;
     }
