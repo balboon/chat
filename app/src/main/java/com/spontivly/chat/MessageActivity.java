@@ -1,14 +1,21 @@
 package com.spontivly.chat;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -23,12 +30,20 @@ import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
 import com.spontivly.chat.services.VolleyController;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageActivity extends AppCompatActivity {
-
+    private RecyclerView mRecyclerView;
+    private MessageAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private DatabaseService dbService;
     private SpontivlyUser user;
+    private ArrayList<MessageItem> msgList;
+    private SpontivlyEventChatMessage postMsg;
+    private int eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +61,7 @@ public class MessageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int mImageView = intent.getIntExtra("imageID", 0);
-        int eventId = intent.getIntExtra("eventId", 0);
+        eventId = intent.getIntExtra("eventId", 0);
         String eventTitle = intent.getStringExtra("eventTitle");
         this.user = (SpontivlyUser) intent.getSerializableExtra("User");
 
@@ -68,6 +83,19 @@ public class MessageActivity extends AppCompatActivity {
             // Implement this feature without material design
         }
 
+        msgList = new ArrayList<>();
+        buildRecyclerView(eventId);
+    }
+
+    public void buildRecyclerView(int eventId) {
+        mRecyclerView = findViewById(R.id.messageList);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+
+        mAdapter = new MessageAdapter(msgList, user);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
         dbService.getEventChat(eventId, new DatabaseService.GetEventChatCallback() {
             @Override
             public void callback(SpontivlyEventChat eventChat) {
@@ -76,19 +104,46 @@ public class MessageActivity extends AppCompatActivity {
                 // Load event chat
                 for (SpontivlyEventChatMessage msg : eventChat.chatMessages) {
                     Date postDate = new Date(msg.createdAt * 1000);
-                    // Check if msg was written by user and place accordingly
-                    if (msg.posterId == user.userId) {
-                        // Place on right side with time only
-                        Log.i("Spontivly", "Me: " + postDate.toString() + "," + msg.postedMessage);
-                    } else {
-                        // Place on left side with poster name and time
-                        Log.i("Spontivly", msg.posterFirstName + " "  +
-                                msg.posterLastName + ": " + postDate.toString() + "," + msg.postedMessage);
-                    }
+
+                    msgList.add(new MessageItem(msg.posterId, msg.posterLastName, msg.postedMessage, msg.createdAt));
+
+                    mAdapter.notifyDataSetChanged();
+                    mRecyclerView.scrollToPosition(msgList.size()-1);
                 }
             }
         });
     }
+
+    public void sendMessage(final View view) {
+        final EditText editText = findViewById(R.id.editText);
+        postMsg = new SpontivlyEventChatMessage();
+        postMsg.eventId = eventId;
+        postMsg.posterId = user.userId;
+        postMsg.posterFirstName = user.firstName;
+        postMsg.posterLastName = user.lastName;
+        postMsg.postedMessage = editText.getText().toString();
+        postMsg.createdAt = System.currentTimeMillis();
+        Log.i("Spontivly", "clicked button");
+        if (editText.getText().toString().length() > 0) {
+            dbService.postEventChatMessage(postMsg, new DatabaseService.UpdateEventChatCallback() {
+                @Override
+                public void callback(int messageId) {
+                    Log.i("Spontivly", postMsg.toString());
+                    editText.getText().clear();
+                    msgList.add(new MessageItem(postMsg.posterId, postMsg.posterLastName, postMsg.postedMessage, postMsg.createdAt));
+                    mAdapter.notifyDataSetChanged();
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    }
+                    Log.i("Spontivly", "Adapter notified!");
+                }
+
+            });
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
