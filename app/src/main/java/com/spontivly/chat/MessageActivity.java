@@ -106,7 +106,6 @@ public class MessageActivity extends AppCompatActivity {
                     Date postDate = new Date(msg.createdAt * 1000);
 
                     msgList.add(new MessageItem(msg.posterId, msg.posterLastName, msg.postedMessage, msg.createdAt));
-
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.scrollToPosition(msgList.size()-1);
                 }
@@ -132,6 +131,9 @@ public class MessageActivity extends AppCompatActivity {
                     editText.getText().clear();
                     msgList.add(new MessageItem(postMsg.posterId, postMsg.posterLastName, postMsg.postedMessage, postMsg.createdAt));
                     mAdapter.notifyDataSetChanged();
+                    mRecyclerView.scrollToPosition(msgList.size()-1);
+
+                    // Hide keyboard
                     View view = getCurrentFocus();
                     if (view != null) {
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
