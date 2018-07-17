@@ -9,7 +9,8 @@ public class SpontivlyEventChatMessage {
     public String postedMessage;
     public long createdAt;
 
-    public SpontivlyEventChatMessage(){}
+    public SpontivlyEventChatMessage(){
+    }
 
     @Override
     public String toString() {
