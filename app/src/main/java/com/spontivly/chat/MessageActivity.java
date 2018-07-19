@@ -79,9 +79,17 @@ public class MessageActivity extends AppCompatActivity {
             public void callback(ArrayList<SpontivlyUser> response) {
                 for (int i = 0; i < response.size(); i++) {
                     if (i < response.size() - 1) {
-                        membersSubtitle = new StringBuilder().append(membersSubtitle).append(user.firstName).append(", ").toString();
+                        if (response.get(i).firstName.toLowerCase().equals(user.firstName.toLowerCase())) {
+                            membersSubtitle = new StringBuilder().append(membersSubtitle).append("Me").append(", ").toString();
+                        } else {
+                            membersSubtitle = new StringBuilder().append(membersSubtitle).append(response.get(i).firstName).append(", ").toString();
+                        }
                     } else {
-                        membersSubtitle = new StringBuilder().append(membersSubtitle).append(user.firstName).toString();
+                        if (response.get(i).firstName.toLowerCase().equals(user.firstName.toLowerCase())) {
+                            membersSubtitle = new StringBuilder().append(membersSubtitle).append("Me").toString();
+                        } else {
+                            membersSubtitle = new StringBuilder().append(membersSubtitle).append(response.get(i).firstName).toString();
+                        }
                     }
                 }
                 if (membersSubtitle.equals("")) {
