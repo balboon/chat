@@ -32,6 +32,8 @@ import com.spontivly.chat.services.VolleyController;
 
 import org.w3c.dom.Text;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -103,13 +105,12 @@ public class MessageActivity extends AppCompatActivity {
                     Log.i("Spontivly", eventChat.lastPostedMessage.toString());
                 // Load event chat
                 for (SpontivlyEventChatMessage msg : eventChat.chatMessages) {
-                    Date postDate = new Date(msg.createdAt * 1000);
-
                     msgList.add(new MessageItem(msg.posterId, msg.posterLastName, msg.postedMessage, msg.createdAt));
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.scrollToPosition(msgList.size()-1);
                 }
+                mAdapter.notifyDataSetChanged();
+                mRecyclerView.scrollToPosition(msgList.size()-1);
             }
+
         });
     }
 
@@ -122,6 +123,7 @@ public class MessageActivity extends AppCompatActivity {
         postMsg.posterLastName = user.lastName;
         postMsg.postedMessage = editText.getText().toString();
         postMsg.createdAt = System.currentTimeMillis();
+
         Log.i("Spontivly", "clicked button");
         if (editText.getText().toString().length() > 0) {
             dbService.postEventChatMessage(postMsg, new DatabaseService.UpdateEventChatCallback() {
