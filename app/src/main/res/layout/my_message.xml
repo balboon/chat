@@ -1,24 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/my_message"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="60dp"
-    android:paddingRight="15dp"
-    android:paddingVertical="10dp"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:paddingTop="4dp">
 
     <TextView
+        android:id="@+id/my_message_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/my_message"
+        android:elevation="0dp"
+        android:paddingBottom="24dp"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="4dp"
+        android:text="How are you doing? This is a long message that should probably wrap."
+        android:textColor="#fff"
+        android:textSize="18sp"
+
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_max="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <TextView
+        android:id="@+id/my_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/my_message_body"
-        android:background="@drawable/my_message"
+        android:textSize="12sp"
+        android:elevation="4dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="4dp"
+        android:text="10:00 AM"
         android:textColor="#fff"
-        android:padding="10dp"
-        android:elevation="2dp"
-        android:textSize="18dp"
-        android:layout_alignParentRight="true"
-        android:text="Placeholder message"/>
+        app:layout_constraintBottom_toBottomOf="@+id/my_message_body"
+        app:layout_constraintEnd_toEndOf="@+id/my_message_body"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

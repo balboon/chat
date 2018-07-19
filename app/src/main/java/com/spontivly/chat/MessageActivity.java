@@ -32,6 +32,8 @@ import com.spontivly.chat.services.VolleyController;
 
 import org.w3c.dom.Text;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -44,6 +46,7 @@ public class MessageActivity extends AppCompatActivity {
     private ArrayList<MessageItem> msgList;
     private SpontivlyEventChatMessage postMsg;
     private int eventId;
+    private String membersSubtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,36 +58,45 @@ public class MessageActivity extends AppCompatActivity {
 //        Network network = new BasicNetwork(new HurlStack());
 //        RequestQueue netRequests = new RequestQueue(cache, network);
 //        netRequests.start();
-
         dbService = new DatabaseService();
         dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
+        msgList = new ArrayList<>();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        buildToolbar(toolbar);
+        buildRecyclerView(eventId);
+    }
+
+    public void buildToolbar(final Toolbar toolbar) {
         Intent intent = getIntent();
         int mImageView = intent.getIntExtra("imageID", 0);
         eventId = intent.getIntExtra("eventId", 0);
         String eventTitle = intent.getStringExtra("eventTitle");
         this.user = (SpontivlyUser) intent.getSerializableExtra("User");
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        membersSubtitle = "";
+        dbService.getUsersAtEvent(eventId, new DatabaseService.GetUsersCallback() {
+            @Override
+            public void callback(ArrayList<SpontivlyUser> response) {
+                for (int i = 0; i < response.size(); i++) {
+                    if (i < response.size() - 1) {
+                        membersSubtitle = new StringBuilder().append(membersSubtitle).append(user.firstName).append(", ").toString();
+                    } else {
+                        membersSubtitle = new StringBuilder().append(membersSubtitle).append(user.firstName).toString();
+                    }
+                }
+                if (membersSubtitle.equals("")) {
+                    toolbar.setSubtitle("No members...");
+                } else {
+                    toolbar.setSubtitle(membersSubtitle);
+                }
+            }
+        });
         toolbar.setTitle(eventTitle);
-        toolbar.setSubtitle("Peter, Al");
         setSupportActionBar(toolbar);
         getSupportActionBar().setLogo(mImageView);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-
-        // Check if we're running Android 5.0+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Call some material design APIs here
-        } else { // Builds below API 21
-            // Implement this feature without material design
-        }
-
-        msgList = new ArrayList<>();
-        buildRecyclerView(eventId);
     }
 
     public void buildRecyclerView(int eventId) {
@@ -103,13 +115,12 @@ public class MessageActivity extends AppCompatActivity {
                     Log.i("Spontivly", eventChat.lastPostedMessage.toString());
                 // Load event chat
                 for (SpontivlyEventChatMessage msg : eventChat.chatMessages) {
-                    Date postDate = new Date(msg.createdAt * 1000);
-
                     msgList.add(new MessageItem(msg.posterId, msg.posterLastName, msg.postedMessage, msg.createdAt));
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.scrollToPosition(msgList.size()-1);
                 }
+                mAdapter.notifyDataSetChanged();
+                mRecyclerView.scrollToPosition(msgList.size()-1);
             }
+
         });
     }
 
@@ -122,6 +133,7 @@ public class MessageActivity extends AppCompatActivity {
         postMsg.posterLastName = user.lastName;
         postMsg.postedMessage = editText.getText().toString();
         postMsg.createdAt = System.currentTimeMillis();
+
         Log.i("Spontivly", "clicked button");
         if (editText.getText().toString().length() > 0) {
             dbService.postEventChatMessage(postMsg, new DatabaseService.UpdateEventChatCallback() {

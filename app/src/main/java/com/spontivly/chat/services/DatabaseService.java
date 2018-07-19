@@ -177,7 +177,7 @@ public class DatabaseService implements Serializable{
 
     ///////////////////////////////////////////////////////////////////////
     // GET USERS AT EVENT
-    public void getUsersAtEvent(String eventId, final GetUsersCallback callback) {
+    public void getUsersAtEvent(int eventId, final GetUsersCallback callback) {
         String url = baseApiUrl + "api=getUsersAtEvents";
         url = addParam(url, "eventIdList", eventId);
         JsonArrayRequest jsObjRequest = new JsonArrayRequest(Request.Method.GET, url, null,
