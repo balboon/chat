@@ -1,6 +1,9 @@
 package com.spontivly.chat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import com.spontivly.chat.services.VolleyController;
 public class MainActivity extends AppCompatActivity {
     private Button user1Btn;
     private Button user2Btn;
+    private Button user3Btn;
     private static DatabaseService dbService;
 
     @Override
@@ -51,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
                 login(24);
             }
         });
+
+        user2Btn = findViewById(R.id.user3);
+        user2Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login(50);
+            }
+        });
+
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        Log.i("Internet", isConnected + "");
     }
 
     public void login(int userId) {
@@ -60,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void callback(SpontivlyUser user) {
                 final Intent intent = new Intent(MainActivity.this, EventActivity.class);
                 intent.putExtra("User", user);
+                Log.i("MainActivity", user.toString());
                 MainActivity.this.startActivity(intent);
                 finish();
             }

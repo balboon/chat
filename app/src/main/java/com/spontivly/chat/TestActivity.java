@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.spontivly.chat.models.SpontivlyEvent;
 import com.spontivly.chat.services.DatabaseService;
+import com.spontivly.chat.services.VolleyController;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class TestActivity extends AppCompatActivity {
         netRequests.start();
 
         dbService = new DatabaseService();
-        dbService.netRequests = netRequests;
+        dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
 //        SpontivlyEventChatMessage msg = new SpontivlyEventChatMessage();
 //        msg.eventId = 313;
