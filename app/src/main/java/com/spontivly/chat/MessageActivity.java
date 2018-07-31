@@ -32,6 +32,7 @@ import com.spontivly.chat.services.VolleyController;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,6 +48,10 @@ public class MessageActivity extends AppCompatActivity {
     private SpontivlyEventChatMessage postMsg;
     private int eventId;
     private String membersSubtitle;
+    private String currentDateString = "MMMM, dd, yyyy";
+    private String lastUser = "not a user";
+    private int addDateFlag, addUserFlag = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,18 @@ public class MessageActivity extends AppCompatActivity {
                     Log.i("Spontivly", eventChat.lastPostedMessage.toString());
                 // Load event chat
                 for (SpontivlyEventChatMessage msg : eventChat.chatMessages) {
-                    msgList.add(new MessageItem(msg.posterId, msg.posterLastName, msg.postedMessage, msg.createdAt));
+                    addDateFlag = addDate(msg.createdAt);
+                    if (addDateFlag == 1) {
+                        msgList.add(new MessageItem(0, "", "", msg.createdAt));
+                    }
+                    addUserFlag = addUserName(msg.posterFirstName + " " + msg.posterLastName);
+                    if (addUserFlag == 1) {
+                        msgList.add(new MessageItem(msg.posterId, msg.posterFirstName + " " + msg.posterLastName, msg.postedMessage, msg.createdAt));
+                    } else {
+                        msgList.add(new MessageItem(msg.posterId, " ", msg.postedMessage, msg.createdAt));
+                    }
+                    lastUser = msg.posterFirstName + " " + msg.posterLastName;
+                    currentDateString = convertDate(msg.createdAt);
                 }
                 mAdapter.notifyDataSetChanged();
                 mRecyclerView.scrollToPosition(msgList.size()-1);
@@ -141,7 +157,7 @@ public class MessageActivity extends AppCompatActivity {
         postMsg.posterLastName = user.lastName;
         postMsg.postedMessage = editText.getText().toString();
         postMsg.createdAt = System.currentTimeMillis();
-
+        addDateFlag = addDate(postMsg.createdAt);
         Log.i("Spontivly", "clicked button");
         if (editText.getText().toString().length() > 0) {
             dbService.postEventChatMessage(postMsg, new DatabaseService.UpdateEventChatCallback() {
@@ -149,7 +165,13 @@ public class MessageActivity extends AppCompatActivity {
                 public void callback(int messageId) {
                     Log.i("Spontivly", postMsg.toString());
                     editText.getText().clear();
-                    msgList.add(new MessageItem(postMsg.posterId, postMsg.posterLastName, postMsg.postedMessage, postMsg.createdAt));
+
+                    if (addDateFlag == 1) {
+                        msgList.add(new MessageItem(0, "", "", postMsg.createdAt));
+                    }
+                    msgList.add(new MessageItem(postMsg.posterId, postMsg.posterFirstName + " " + postMsg.posterLastName, postMsg.postedMessage, postMsg.createdAt));
+                    lastUser = postMsg.posterFirstName + " " + postMsg.posterLastName;
+                    currentDateString = convertDate(postMsg.createdAt);
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.scrollToPosition(msgList.size()-1);
 
@@ -192,5 +214,22 @@ public class MessageActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public String convertDate(long date) {
+        String dateString = new SimpleDateFormat("MMMM dd, yyyy").format(date);
+        return dateString;
+    }
+
+    public int addDate(long date) {
+        if (currentDateString.equals(convertDate(date)))
+            return 0;
+        return 1;
+    }
+
+    public int addUserName(String user) {
+        if (lastUser.equals(user))
+            return 0;
+        return 1;
     }
 }

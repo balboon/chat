@@ -19,6 +19,7 @@ import java.util.Date;
 public class MessageAdapter extends RecyclerView.Adapter {
     private static final int MESSAGE_SENT = 0;
     private static final int MESSAGE_RECEIVED = 1;
+    private static final int MESSAGE_DATE = 2;
     private ArrayList<MessageItem> mMsgList;
     private MessageAdapter.OnItemClickListener mListener;
     private DatabaseService dbService;
@@ -47,6 +48,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
         } else if (viewType == MESSAGE_RECEIVED) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.other_message, parent, false);
             return new ReceivedMessageHolder(view);
+        } else if (viewType == MESSAGE_DATE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_message_layout, parent, false);
+            return new DateMessageHolder(view);
         }
         return null;
     }
@@ -56,6 +60,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
         MessageItem currentItem = mMsgList.get(position);
         if (currentItem.getID() == mUser.userId) {
             return MESSAGE_SENT;
+        } else if (currentItem.getUser().equals("")) {
+            return MESSAGE_DATE;
         } else {
             return MESSAGE_RECEIVED;
         }
@@ -72,6 +78,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
             case MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(currentItem);
                 break;
+            case MESSAGE_DATE:
+                ((DateMessageHolder) holder).bind(currentItem);
+                break;
         }
     }
 
@@ -83,7 +92,23 @@ public class MessageAdapter extends RecyclerView.Adapter {
             return -1;
         }
     }
+    private class DateMessageHolder extends RecyclerView.ViewHolder {
+        TextView dateTime;
+        DateMessageHolder(View itemView) {
+            super(itemView);
+            dateTime = itemView.findViewById(R.id.date_time);
+        }
 
+        void bind(MessageItem messageItem) {
+            String currentDate = new SimpleDateFormat("MMMM dd, yyyy").format(new Date());
+            String msgDate = new SimpleDateFormat("MMMM dd, yyyy").format(messageItem.getTime());
+            if (currentDate.equals(msgDate)) {
+                dateTime.setText("Today");
+            } else {
+                dateTime.setText(msgDate);
+            }
+        }
+    }
     private class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView myMsg, myTime;
         SentMessageHolder(View itemView) {
@@ -108,7 +133,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
             theirMsg = itemView.findViewById(R.id.their_message_body);
             theirName = itemView.findViewById(R.id.their_name);
             theirTime = itemView.findViewById(R.id.their_time);
-
         }
 
         void bind(MessageItem messageItem) {
@@ -117,6 +141,8 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         void bindNew(MessageItem messageItem) {
             theirMsg.setText(messageItem.getMsg());
+            if (messageItem.getUser().equals(" "))
+                theirName.setVisibility(View.GONE);
             theirName.setText(messageItem.getUser());
             Date date = new Date(messageItem.getTime());
             DateFormat formatter = new SimpleDateFormat("hh:mm a");
