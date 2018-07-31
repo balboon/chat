@@ -24,6 +24,7 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_min="75dp"
         app:layout_constraintWidth_max="300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
