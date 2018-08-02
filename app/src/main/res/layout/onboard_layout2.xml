@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboard_layout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/slide_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/spontivly_logo"/>
+
+
+    <TextView
+        android:id="@+id/slide_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:layout_below="@id/nightlife_label"
+        android:text="@string/onboarding_preferences"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_background"
+        android:text="@string/next_label"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/sports_img"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/slide_logo"
+        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="30dp"
+        app:srcCompat="@drawable/onboarding_sports" />
+
+    <TextView
+        android:id="@+id/sports_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sports"
+        android:layout_alignRight="@id/sports_img"
+        android:layout_alignLeft="@id/sports_img"
+        android:gravity="center"
+        android:layout_below="@id/sports_img"
+        />
+
+
+    <ImageView
+        android:id="@+id/music_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_alignTop="@id/sports_img"
+        android:layout_alignBottom="@id/sports_img"
+        android:layout_toRightOf="@id/sports_img"
+        android:gravity="center"
+        android:layout_below="@id/slide_logo"
+        app:srcCompat="@drawable/onboarding_music" />
+
+    <TextView
+        android:id="@+id/music_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/music"
+        android:layout_alignRight="@id/music_img"
+        android:layout_alignLeft="@id/music_img"
+        android:gravity="center"
+        android:layout_below="@id/music_img"/>
+
+    <ImageView
+        android:id="@+id/culture_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_alignTop="@id/music_img"
+        android:layout_alignBottom="@id/music_img"
+        android:layout_toRightOf="@id/music_img"
+        android:gravity="center"
+        android:layout_below="@id/slide_logo"
+        app:srcCompat="@drawable/onboarding_culture" />
+
+    <TextView
+        android:id="@+id/culture_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/culture"
+        android:layout_below="@id/culture_img"
+        android:layout_alignRight="@id/culture_img"
+        android:layout_alignLeft="@id/culture_img"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/leisure_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_alignLeft="@id/sports_img"
+        android:layout_alignRight="@id/sports_img"
+        android:gravity="center"
+        android:layout_below="@id/sports_label"
+        app:srcCompat="@drawable/onboarding_leisure" />
+
+    <TextView
+        android:id="@+id/leisure_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/leisure"
+        android:layout_below="@id/leisure_img"
+        android:layout_alignRight="@id/leisure_img"
+        android:layout_alignLeft="@id/leisure_img"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/nightlife_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/music_img"
+        android:layout_alignRight="@id/music_img"
+        android:layout_alignTop="@id/leisure_img"
+        android:layout_alignBottom="@id/leisure_img"
+        android:layout_below="@id/music_img"
+        android:layout_toRightOf="@id/leisure_img"
+        app:srcCompat="@drawable/onboarding_nightlife" />
+
+    <TextView
+        android:id="@+id/nightlife_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nightlife"
+        android:layout_below="@id/nightlife_img"
+        android:layout_alignRight="@id/nightlife_img"
+        android:layout_alignLeft="@id/nightlife_img"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/food_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/culture_img"
+        android:layout_alignRight="@id/culture_img"
+        android:layout_alignTop="@id/nightlife_img"
+        android:layout_alignBottom="@id/nightlife_img"
+        android:gravity="center"
+        android:layout_below="@id/culture_img"
+        android:layout_toRightOf="@id/nightlife_img"
+        app:srcCompat="@drawable/onboarding_food" />
+
+    <TextView
+        android:id="@+id/food_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/food"
+        android:layout_below="@id/food_img"
+        android:layout_alignLeft="@id/food_img"
+        android:gravity="center"/>
+
+</RelativeLayout>

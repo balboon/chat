@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboard_layout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/slide_logo"
+        android:src="@drawable/spontivly_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/slide_description"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="@string/spontivly_slogan"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/create_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:background="@drawable/button_background"
+        android:text="@string/onboarding_create"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/slide_description"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_button"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true">
+    <ImageView
+        android:id="@+id/fb_logo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:srcCompat="@drawable/onboarding_fb"
+
+        />
+    <TextView
+        android:id="@+id/fb_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fb_logo"
+        android:layout_alignTop="@id/fb_logo"
+        android:layout_alignBottom="@id/fb_logo"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="@string/fb_login"
+        />
+    <ImageView
+        android:id="@+id/ig_logo"
+        android:layout_marginTop="10dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/fb_logo"
+        app:srcCompat="@drawable/onboarding_ig"
+        />
+    <TextView
+        android:id="@+id/ig_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ig_logo"
+        android:layout_alignTop="@id/ig_logo"
+        android:layout_alignBottom="@id/ig_logo"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="@string/ig_login"
+        />
+    <ImageView
+        android:id="@+id/in_logo"
+        android:layout_marginTop="10dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/ig_logo"
+        app:srcCompat="@drawable/onboarding_linkedin"
+        />
+    <TextView
+        android:id="@+id/in_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/in_logo"
+        android:layout_alignTop="@id/in_logo"
+        android:layout_alignBottom="@id/in_logo"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="@string/in_login"
+        />
+    </RelativeLayout>
+
+</RelativeLayout>

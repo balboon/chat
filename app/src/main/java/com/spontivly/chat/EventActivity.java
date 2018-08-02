@@ -15,13 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.spontivly.chat.models.SpontivlyEvent;
+import com.spontivly.chat.models.SpontivlyEventChat;
 import com.spontivly.chat.models.SpontivlyUser;
 import com.spontivly.chat.services.DatabaseService;
 import com.spontivly.chat.services.VolleyController;
@@ -32,7 +27,7 @@ public class EventActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ChatAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<ChatItem> mChatList;
+    private ArrayList<EventChatItem> mEventChatList;
     private FloatingActionButton insertBtn;
     private DatabaseService dbService;
     private SpontivlyUser user;
@@ -55,10 +50,16 @@ public class EventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mChatList = new ArrayList<>();
+        mEventChatList = new ArrayList<>();
         createChatList();
         buildRecyclerView();
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                //Define Back Button Function
+            }
+        });
         insertBtn = findViewById(R.id.button_insert);
         insertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,13 +91,23 @@ public class EventActivity extends AppCompatActivity {
 //                    else if ((i%3) == 2)
 //                        mChatList.add(new ChatItem(R.drawable.ic_local_car_wash, e.title, "Members..."));
 //                }
-                for (SpontivlyEvent e : response) {
+                for (final SpontivlyEvent e : response) {
                     Log.i("Spontively", e.title);
-                    mChatList.add(new ChatItem(R.drawable.ic_android, e.title, "Members..."));
+                    dbService.getEventChat(e.eventId, new DatabaseService.GetEventChatCallback() {
+                        @Override
+                        public void callback(SpontivlyEventChat eventChat) {
+                            if (eventChat.lastPostedMessage != null)
+                                mEventChatList.add(new EventChatItem(R.drawable.ic_android, e.title, eventChat.lastPostedMessage.postedMessage));
+                            else {
+                                mEventChatList.add(new EventChatItem(R.drawable.ic_android, e.title, ""));
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
                 mAdapter.notifyDataSetChanged();
-
             }
+
         });
     }
 
@@ -104,7 +115,7 @@ public class EventActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new ChatAdapter(mChatList);
+        mAdapter = new ChatAdapter(mEventChatList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

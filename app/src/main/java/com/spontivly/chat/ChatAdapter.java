@@ -10,11 +10,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
-    private ArrayList<ChatItem> mChatList;
+    private ArrayList<EventChatItem> mEventChatList;
     private OnItemClickListener mListener;
 
-    public ChatAdapter(ArrayList<ChatItem> chatList) {
-        mChatList = chatList;
+    public ChatAdapter(ArrayList<EventChatItem> chatList) {
+        mEventChatList = chatList;
     }
 
     public interface OnItemClickListener {
@@ -59,7 +59,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
-        ChatItem currentItem = mChatList.get(position);
+        EventChatItem currentItem = mEventChatList.get(position);
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getEventName());
         holder.mTextView2.setText(currentItem.getMembers());
@@ -67,17 +67,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public int getItemCount() {
-        return mChatList.size();
+        return mEventChatList.size();
     }
 
     public String getEvent(int position) {
-        ChatItem currentItem = mChatList.get(position);
+        EventChatItem currentItem = mEventChatList.get(position);
         String event = currentItem.getEventName();
         return event;
     }
 
     public int getImage(int position) {
-        ChatItem currentItem = mChatList.get(position);
+        EventChatItem currentItem = mEventChatList.get(position);
         int image = currentItem.getImageResource();
         return image;
     }

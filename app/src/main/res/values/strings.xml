@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">SpontivlyChat</string>
+    <string name="loc_label">TURN ON LOCATION SERVICES</string>
+    <string name="next_label">NEXT</string>
+    <string name="onboarding_preferences">Choose some events you\'re interested in!</string>
+    <string name="onboarding_SMS">Spontivly will send you an SMS message to verify your phone number. Carrier SMS charges may apply.</string>
+    <string name="onboarding_phone">Enter a Phone Number</string>
+    <string name="onboarding_verification">Enter 6-Digit Verification Code</string>
+    <string name="spontivly_slogan">Real people, doing real things, in real time!</string>
+    <string name="onboarding_create">CREATE ACCOUNT</string>
+    <string name="onboarding_resend">Resend SMS Message</string>
+    <string name="onboarding_call">Call me</string>
+    <string name="fb_login">Login with Facebook</string>
+    <string name="ig_login">Login with Instagram</string>
+    <string name="in_login">Login with LinkedIn</string>
+    <string name="country_text">Enter a Country</string>
+    <string name="onboarding_wrong_num">Wrong number?</string>
+    <string name="onboarding_name"><![CDATA[First & Last Name]]></string>
+    <string name="onboarding_birthday">Date of Birth</string>
+    <string name="onboarding_gender">Gender</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="sports">Sports</string>
+    <string name="music">Music</string>
+    <string name="culture">Culture</string>
+    <string name="leisure">Leisure</string>
+    <string name="nightlife">Nightlife</string>
+    <string name="food">Food</string>
 </resources>
