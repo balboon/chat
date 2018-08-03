@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MessageActivity" />
-        <activity android:name=".EventActivity"></activity>
+        <activity android:name=".EventActivity" />
+        <activity android:name=".OnboardActivity"></activity>
     </application>
 
 </manifest>

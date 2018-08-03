@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboard_layout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/slide_logo"
+        android:src="@drawable/spontivly_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/verification_text"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/slide_logo"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:hint="@string/onboarding_verification"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:inputType="number"/>
+
+    <TextView
+        android:id="@+id/wrong_number"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/verification_text"
+        android:layout_alignLeft="@id/verification_text"
+        android:text="@string/onboarding_wrong_num"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccentBlue"/>
+
+    <ImageView
+        android:id="@+id/sms_logo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/wrong_number"
+        android:layout_below="@id/wrong_number"
+        android:src="@drawable/onboarding_sms_logo"/>
+
+    <TextView
+        android:id="@+id/sms_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sms_logo"
+        android:layout_alignTop="@id/sms_logo"
+        android:layout_alignBottom="@id/sms_logo"
+        android:layout_marginLeft="8dp"
+        android:gravity="center"
+        android:text="@string/onboarding_resend"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <ImageView
+        android:id="@+id/phone_logo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@id/wrong_number"
+        android:layout_below="@id/sms_logo"
+        android:src="@drawable/onboarding_phone"/>
+
+    <TextView
+        android:id="@+id/phone_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/phone_logo"
+        android:layout_alignTop="@id/phone_logo"
+        android:layout_alignBottom="@id/phone_logo"
+        android:layout_marginLeft="8dp"
+        android:gravity="center"
+        android:text="@string/onboarding_call"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/slide_description"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sms_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp"
+        android:text="@string/onboarding_SMS"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/verify_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_background"
+        android:text="@string/next_label"
+        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="10dp" />
+</RelativeLayout>

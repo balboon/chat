@@ -1,11 +1,11 @@
 package com.spontivly.chat;
 
-public class ChatItem {
+public class EventChatItem {
     private int mImageResource;
     private String mEvent;
     private String mMembers;
 
-    public ChatItem(int imageResource, String event, String members) {
+    public EventChatItem(int imageResource, String event, String members) {
         mImageResource = imageResource;
         mEvent = event;
         mMembers = members;

@@ -110,6 +110,14 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapter.notifyDataSetChanged();
+                finish();
+                //Define Back Button Function
+            }
+        });
     }
 
     public void buildRecyclerView(int eventId) {
