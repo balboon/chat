@@ -82,5 +82,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return image;
     }
 
-
+    public void swap(ArrayList<EventChatItem> oldList) {
+        if (oldList != null) {
+            mEventChatList.clear();
+            mEventChatList.addAll(oldList);
+        }
+        notifyDataSetChanged();
+    }
 }

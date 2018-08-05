@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SpontivlyTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +19,16 @@
         </activity>
         <activity android:name=".MessageActivity" />
         <activity android:name=".EventActivity" />
-        <activity android:name=".OnboardActivity"></activity>
+        <activity android:name=".OnboardActivity" />
+        <activity android:name=".SplashActivity">
+            <!-- Uncomment to get splash screen
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
     </application>
 
 </manifest>

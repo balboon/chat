@@ -22,4 +22,9 @@
         <item name="android:background">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
+
+    <style name="SpontivlyTheme.Launcher">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@layout/launch_screen</item>
+    </style>
 </resources>

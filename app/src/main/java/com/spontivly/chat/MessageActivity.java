@@ -58,11 +58,6 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        // Init database services
-//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-//        Network network = new BasicNetwork(new HurlStack());
-//        RequestQueue netRequests = new RequestQueue(cache, network);
-//        netRequests.start();
         dbService = new DatabaseService();
         dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
@@ -110,14 +105,6 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.notifyDataSetChanged();
-                finish();
-                //Define Back Button Function
-            }
-        });
     }
 
     public void buildRecyclerView(int eventId) {
@@ -187,7 +174,9 @@ public class MessageActivity extends AppCompatActivity {
                     View view = getCurrentFocus();
                     if (view != null) {
                         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                        }
                     }
                     Log.i("Spontivly", "Adapter notified!");
                 }

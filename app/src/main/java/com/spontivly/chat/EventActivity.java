@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,16 +51,13 @@ public class EventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        mEventChatList = new ArrayList<>();
-        createChatList();
-        buildRecyclerView();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                //Define Back Button Function
-            }
-        });
+        if (mEventChatList == null) {
+            mEventChatList = new ArrayList<>();
+            createChatList();
+            buildRecyclerView();
+        }
+        mAdapter.notifyDataSetChanged();
+
         insertBtn = findViewById(R.id.button_insert);
         insertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,23 +74,20 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("Spontivly", "Resumed!");
+    }
+
     public void createChatList() {
         dbService.getChatEvents(new DatabaseService.GetActiveCallback() {
             @Override
             public void callback(ArrayList<SpontivlyEvent> response) {
                 events = response;
-//                Log.i("Spontively", events.size() + "");
-//                for (int i=0; i<response.size(); i++) {
-//                    SpontivlyEvent e = response.get(i);
-//                    if ((i%3) == 0)
-//                        mChatList.add(new ChatItem(R.drawable.ic_android, e.title, "Members..."));
-//                    else if ((i%3) == 1)
-//                        mChatList.add(new ChatItem(R.drawable.ic_local_dining, e.title, "Members..."));
-//                    else if ((i%3) == 2)
-//                        mChatList.add(new ChatItem(R.drawable.ic_local_car_wash, e.title, "Members..."));
-//                }
-                for (final SpontivlyEvent e : response) {
-                    Log.i("Spontively", e.title);
+                for (final SpontivlyEvent e : events) {
+                    Log.e("Spontively", e.title);
+                    mEventChatList.clear();
                     dbService.getEventChat(e.eventId, new DatabaseService.GetEventChatCallback() {
                         @Override
                         public void callback(SpontivlyEventChat eventChat) {
@@ -105,7 +100,6 @@ public class EventActivity extends AppCompatActivity {
                         }
                     });
                 }
-                mAdapter.notifyDataSetChanged();
             }
 
         });
@@ -119,17 +113,20 @@ public class EventActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
         mAdapter.setOnItemClickListener(new ChatAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                Log.e("Spontivly", "Position: " + position);
                 openMessage(position);
             }
         });
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(itemDecoration);
     }
 
     public void openMessage(int position) {
         Intent intent = new Intent(this, MessageActivity.class);
+
         int image = mAdapter.getImage(position);
         intent.putExtra("imageID", image);
         intent.putExtra("eventId", events.get(position).eventId);
@@ -148,6 +145,9 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.item1:
                 Toast.makeText(this, "Item1 Selected!", Toast.LENGTH_SHORT).show();
                 return true;
