@@ -10,6 +10,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
     </style>
 
     <style name="ToolBarTheme" parent="ThemeOverlay.AppCompat.Light">

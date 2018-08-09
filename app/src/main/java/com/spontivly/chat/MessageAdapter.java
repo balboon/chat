@@ -2,6 +2,7 @@ package com.spontivly.chat;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,8 +142,9 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         void bindNew(MessageItem messageItem) {
             theirMsg.setText(messageItem.getMsg());
-            if (messageItem.getUser().equals(" "))
-                theirName.setVisibility(View.GONE);
+            if (messageItem.getUser().equals(" ")) {
+               // theirName.setVisibility(View.GONE);
+            }
             theirName.setText(messageItem.getUser());
             Date date = new Date(messageItem.getTime());
             DateFormat formatter = new SimpleDateFormat("hh:mm a");

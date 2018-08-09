@@ -41,7 +41,6 @@ import java.util.Date;
 public class MessageActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MessageAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private DatabaseService dbService;
     private SpontivlyUser user;
     private ArrayList<MessageItem> msgList;
@@ -57,7 +56,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
+        getWindow().setBackgroundDrawableResource(R.drawable.chat_wallpaper);
         dbService = new DatabaseService();
         dbService.netRequests = VolleyController.getInstance(this.getApplicationContext()).getRequestQueue();
 
@@ -80,15 +79,15 @@ public class MessageActivity extends AppCompatActivity {
                 for (int i = 0; i < response.size(); i++) {
                     if (i < response.size() - 1) {
                         if (response.get(i).firstName.toLowerCase().equals(user.firstName.toLowerCase())) {
-                            membersSubtitle = new StringBuilder().append(membersSubtitle).append("Me").append(", ").toString();
+                            membersSubtitle = membersSubtitle + "Me" + ", ";
                         } else {
-                            membersSubtitle = new StringBuilder().append(membersSubtitle).append(response.get(i).firstName).append(", ").toString();
+                            membersSubtitle = membersSubtitle + response.get(i).firstName + ", ";
                         }
                     } else {
                         if (response.get(i).firstName.toLowerCase().equals(user.firstName.toLowerCase())) {
-                            membersSubtitle = new StringBuilder().append(membersSubtitle).append("Me").toString();
+                            membersSubtitle = membersSubtitle + "Me";
                         } else {
-                            membersSubtitle = new StringBuilder().append(membersSubtitle).append(response.get(i).firstName).toString();
+                            membersSubtitle = membersSubtitle + response.get(i).firstName;
                         }
                     }
                 }
@@ -107,10 +106,9 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    public void buildRecyclerView(int eventId) {
+    public void buildRecyclerView(final int eventId) {
         mRecyclerView = findViewById(R.id.messageList);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 
         mAdapter = new MessageAdapter(msgList, user);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -127,13 +125,14 @@ public class MessageActivity extends AppCompatActivity {
                     if (addDateFlag == 1) {
                         msgList.add(new MessageItem(0, "", "", msg.createdAt));
                     }
-                    addUserFlag = addUserName(msg.posterFirstName + " " + msg.posterLastName);
+                    addUserFlag = addUserName(msg.posterFirstName + " " + msg.posterLastName, addDateFlag);
                     if (addUserFlag == 1) {
                         msgList.add(new MessageItem(msg.posterId, msg.posterFirstName + " " + msg.posterLastName, msg.postedMessage, msg.createdAt));
                     } else {
                         msgList.add(new MessageItem(msg.posterId, " ", msg.postedMessage, msg.createdAt));
                     }
                     lastUser = msg.posterFirstName + " " + msg.posterLastName;
+                    Log.e("Spontivly", lastUser);
                     currentDateString = convertDate(msg.createdAt);
                 }
                 mAdapter.notifyDataSetChanged();
@@ -224,9 +223,12 @@ public class MessageActivity extends AppCompatActivity {
         return 1;
     }
 
-    public int addUserName(String user) {
-        if (lastUser.equals(user))
+    public int addUserName(String user, int addDateFlag) {
+        if (lastUser.equals(user) && addDateFlag == 1) {
+            return 1;
+        } else if (lastUser.equals(user) && addDateFlag == 0) {
             return 0;
+        }
         return 1;
     }
 }
