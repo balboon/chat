@@ -62,7 +62,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         EventChatItem currentItem = mEventChatList.get(position);
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getEventName());
-        holder.mTextView2.setText(currentItem.getMembers());
+        holder.mTextView2.setText(currentItem.getLastMessage());
     }
 
     @Override
@@ -82,5 +82,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return image;
     }
 
+    public EventChatItem getEventChatItem(int position) {
+        return mEventChatList.get(position);
+    }
 
 }

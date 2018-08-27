@@ -13,14 +13,20 @@ public class VolleyController    {
     private static Context mCtx;
 
     private VolleyController(Context context) {
+        if (mInstance != null) {
+            throw new RuntimeException("Use VolleyController.getInstance()");
+        }
         mCtx = context;
         mRequestQueue = getRequestQueue();
     }
 
-    public static synchronized VolleyController getInstance(Context context) {
+    public static VolleyController getInstance(Context context) {
         // If instance is not available, create it. If available, reuse and return the object.
         if (mInstance == null) {
-            mInstance = new VolleyController(context);
+            synchronized (VolleyController.class) {
+                if (mInstance == null)
+                    mInstance = new VolleyController(context);
+            }
         }
         return mInstance;
     }

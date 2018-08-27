@@ -97,9 +97,15 @@ public class EventActivity extends AppCompatActivity {
                         @Override
                         public void callback(SpontivlyEventChat eventChat) {
                             if (eventChat.lastPostedMessage != null)
-                                mEventChatList.add(new EventChatItem(R.drawable.ic_android, e.title, eventChat.lastPostedMessage.postedMessage));
+                                mEventChatList.add(new EventChatItem(R.drawable.ic_android,
+                                        e.eventId,
+                                        e.title,
+                                        eventChat.lastPostedMessage.postedMessage));
                             else {
-                                mEventChatList.add(new EventChatItem(R.drawable.ic_android, e.title, ""));
+                                mEventChatList.add(new EventChatItem(R.drawable.ic_android,
+                                        e.eventId,
+                                        e.title,
+                                        ""));
                             }
                             mAdapter.notifyDataSetChanged();
                         }
@@ -131,9 +137,12 @@ public class EventActivity extends AppCompatActivity {
     public void openMessage(int position) {
         Intent intent = new Intent(this, MessageActivity.class);
         int image = mAdapter.getImage(position);
+        EventChatItem eventChatItem = mAdapter.getEventChatItem(position);
         intent.putExtra("imageID", image);
-        intent.putExtra("eventId", events.get(position).eventId);
-        intent.putExtra("eventTitle", events.get(position).title);
+//        intent.putExtra("eventId", events.get(position).eventId);
+//        intent.putExtra("eventTitle", events.get(position).title);
+        intent.putExtra("eventId", eventChatItem.getEventId());
+        intent.putExtra("eventTitle", eventChatItem.getEventName());
         intent.putExtra("User", this.user);
 
         startActivity(intent);

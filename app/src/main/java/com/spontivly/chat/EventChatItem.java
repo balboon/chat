@@ -3,12 +3,14 @@ package com.spontivly.chat;
 public class EventChatItem {
     private int mImageResource;
     private String mEvent;
-    private String mMembers;
+    private String mLastMsg;
+    private int mEventId;
 
-    public EventChatItem(int imageResource, String event, String members) {
+    public EventChatItem(int imageResource, int eventId, String event, String lastMsg) {
         mImageResource = imageResource;
         mEvent = event;
-        mMembers = members;
+        mLastMsg = lastMsg;
+        mEventId = eventId;
     }
 
     public int getImageResource() {
@@ -19,7 +21,9 @@ public class EventChatItem {
         return mEvent;
     }
 
-    public String getMembers (){
-        return mMembers;
+    public String getLastMessage(){
+        return mLastMsg;
     }
+
+    public int getEventId() { return mEventId; }
 }
