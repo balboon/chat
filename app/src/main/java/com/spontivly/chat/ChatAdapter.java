@@ -86,4 +86,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return mEventChatList.get(position);
     }
 
+    public void updateChatItems(ArrayList<EventChatItem> newEventChatItems) {
+        this.mEventChatList.clear();
+        this.mEventChatList = newEventChatItems;
+        this.notifyDataSetChanged();
+    }
+
 }

@@ -147,6 +147,15 @@ public class EventActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.mEventChatList.clear();
+        this.createChatList();
+        this.mAdapter.updateChatItems(this.mEventChatList);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
