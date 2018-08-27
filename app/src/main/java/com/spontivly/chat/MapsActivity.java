@@ -18,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,23 +29,32 @@ import android.widget.Toolbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.spontivly.chat.models.PlaceInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
     private static final String TAG = "MapsActivity";
@@ -53,13 +64,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
+    private GooglePlacesAutoCompleteAdapter googlePlacesAutoCompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private PlaceInfo mPlace;
+    private Marker mMarker;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
 
     //Widgets
-    private EditText mSearchText;
+    private AutoCompleteTextView mSearchText;
     private ImageView mGps;
     private RelativeLayout relativeLayout;
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     private void init() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+        googlePlacesAutoCompleteAdapter = new GooglePlacesAutoCompleteAdapter(this, mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+        mSearchText.setAdapter(googlePlacesAutoCompleteAdapter);
+
+        mSearchText.setOnItemClickListener(mAutoCompleteClickListener);
+
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -130,7 +165,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         relativeLayout = findViewById(R.id.mapRelativeParent);
-        mSearchText = (EditText) findViewById(R.id.input_search);
+        mSearchText = findViewById(R.id.input_search);
+
         mSearchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -141,7 +177,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-        mGps = (ImageView) findViewById(R.id.ic_gps);
+        mGps = findViewById(R.id.ic_gps);
         mGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,12 +217,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
-        /*
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney)); */
-
     }
 
     private void getDeviceLocation() {
@@ -213,6 +243,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: Security Exception: " + e.getMessage());
         }
+    }
+
+    private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo) {
+        Log.d(TAG, "moveCamera: Moving the camera to: Lat: " + latLng.latitude + ", Long: " + latLng.longitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        //mMap.clear();
+
+        if(placeInfo != null) {
+            try {
+                String snippet = "Address: " + placeInfo.getAddress() + "\n" +
+                        "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
+                        "Website: " + placeInfo.getWebsiteUri() + "\n" +
+                        "Price Rating: " + placeInfo.getRating() + "\n";
+
+                MarkerOptions options = new MarkerOptions()
+                        .position(latLng)
+                        .title(placeInfo.getName())
+                        .snippet(snippet);
+
+                mMarker = mMap.addMarker(options);
+            } catch (NullPointerException e) {
+                Log.e(TAG, "moveCamera: NullPointerException: " + e.getMessage());
+            }
+        } else {
+            mMap.addMarker(new MarkerOptions().position(latLng));
+        }
+
+        hideSoftKeyboard();
     }
 
     private void moveCamera(LatLng latLng, float zoom, String title) {
@@ -262,4 +321,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+    /*
+    ------------------------ GOOGLE PLACES API AUTOCOMPLETE SUGGESTIONS ---------------------------
+     */
+
+    private AdapterView.OnItemClickListener mAutoCompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            hideSoftKeyboard();
+
+            final AutocompletePrediction item = googlePlacesAutoCompleteAdapter.getItem(i);
+            final String placeId;
+            if (item != null) {
+                placeId = item.getPlaceId();
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(mGoogleApiClient, placeId);
+                placeResult.setResultCallback(mUpdateDetailsCallback);
+            }
+        }
+    };
+    private ResultCallback<PlaceBuffer> mUpdateDetailsCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(@NonNull PlaceBuffer places) {
+            if(!places.getStatus().isSuccess()) {
+                Log.d(TAG, "onResult: Place query was not successful: " + places.getStatus().toString());
+                places.release(); // Must release to prevent memory leaks
+                return;
+            }
+            final Place place = places.get(0);
+
+            try {
+                mPlace = new PlaceInfo();
+                if (place.getName() != null) {
+                    mPlace.setName(place.getName().toString());
+                    Log.d(TAG, "onResult: place name: " + mPlace.getName());
+                }
+                if (place.getAddress() != null) {
+                    mPlace.setAddress(place.getAddress().toString());
+                    Log.d(TAG, "onResult: place address: " + mPlace.getAddress());
+                }
+                if (place.getAttributions() != null) {
+                    mPlace.setAttributions(place.getAttributions().toString());
+                    Log.d(TAG, "onResult: place attributions: " + mPlace.getAttributions());
+                }
+                if (place.getId() != null) {
+                    mPlace.setId(place.getId());
+                    Log.d(TAG, "onResult: place id: " + mPlace.getId());
+                }
+                if (place.getLatLng() != null) {
+                    mPlace.setLatLng(place.getLatLng());
+                    Log.d(TAG, "onResult: place latlng: " + mPlace.getLatLng().toString());
+                }
+                if (place.getPhoneNumber() != null) {
+                    mPlace.setPhoneNumber(place.getPhoneNumber().toString());
+                    Log.d(TAG, "onResult: place phone number: " + mPlace.getPhoneNumber());
+                }
+                if (place.getWebsiteUri() != null) {
+                    mPlace.setWebsiteUri(place.getWebsiteUri());
+                    Log.d(TAG, "onResult: place website: " + mPlace.getWebsiteUri().toString());
+                }
+                mPlace.setRating(place.getRating());
+                Log.d(TAG, "onResult: place rating: " + mPlace.getRating());
+
+            } catch (NullPointerException e) {
+                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage());
+            }
+
+            moveCamera(new LatLng(place.getViewport().getCenter().latitude,
+                    place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace);
+            places.release();
+        }
+    };
 }
