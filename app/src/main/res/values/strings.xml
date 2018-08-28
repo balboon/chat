@@ -15,7 +15,7 @@
     <string name="in_login">Login with LinkedIn</string>
     <string name="country_text">Enter a Country</string>
     <string name="onboarding_wrong_num">Wrong number?</string>
-    <string name="onboarding_name"><![CDATA[First & Last Name]]></string>
+    <string name="onboarding_name">First &amp; Last Name</string>
     <string name="onboarding_birthday">Date of Birth</string>
     <string name="onboarding_gender">Gender</string>
     <string name="onboarding_finish">Finish</string>
@@ -24,5 +24,11 @@
     <string name="culture">Culture</string>
     <string name="leisure">Leisure</string>
     <string name="nightlife">Nightlife</string>
-    <string name="food">Food</string>
+    <string name="food">Food &amp; Drinks</string>
+    <string name="onboarding_join">Spontivly is an app to help you find people to do stuff with! Look for pins in your area, or drop a pin yourself to get some people to join you!</string>
+    <string name="their_message_example">How are you doing? This is a long message that should probably wrap.</string>
+    <string name="their_time_example">10:35 PM</string>
+    <string name="their_name_example">Their Name</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="search_hint">Enter Address, City, or Postal Code</string>
 </resources>

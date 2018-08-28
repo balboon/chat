@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription"
     android:id="@+id/onboard_layout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -47,6 +48,7 @@
         android:layout_below="@id/slide_logo"
         android:layout_marginTop="50dp"
         android:layout_marginHorizontal="30dp"
+        android:layout_toLeftOf="@id/music_img"
         app:srcCompat="@drawable/onboarding_sports" />
 
     <TextView
@@ -63,14 +65,12 @@
 
     <ImageView
         android:id="@+id/music_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
+        android:layout_alignTop="@+id/sports_img"
+        android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="30dp"
-        android:layout_alignTop="@id/sports_img"
-        android:layout_alignBottom="@id/sports_img"
-        android:layout_toRightOf="@id/sports_img"
         android:gravity="center"
-        android:layout_below="@id/slide_logo"
         app:srcCompat="@drawable/onboarding_music" />
 
     <TextView
@@ -85,8 +85,8 @@
 
     <ImageView
         android:id="@+id/culture_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
         android:layout_marginHorizontal="30dp"
         android:layout_alignTop="@id/music_img"
         android:layout_alignBottom="@id/music_img"
@@ -107,8 +107,8 @@
 
     <ImageView
         android:id="@+id/leisure_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
         android:layout_marginTop="50dp"
         android:layout_alignLeft="@id/sports_img"
         android:layout_alignRight="@id/sports_img"
@@ -128,8 +128,8 @@
 
     <ImageView
         android:id="@+id/nightlife_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
         android:layout_alignLeft="@id/music_img"
         android:layout_alignRight="@id/music_img"
         android:layout_alignTop="@id/leisure_img"
@@ -150,8 +150,8 @@
 
     <ImageView
         android:id="@+id/food_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="60dp"
         android:layout_alignLeft="@id/culture_img"
         android:layout_alignRight="@id/culture_img"
         android:layout_alignTop="@id/nightlife_img"
@@ -165,9 +165,11 @@
         android:id="@+id/food_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/food"
-        android:layout_below="@id/food_img"
+        android:layout_below="@+id/food_img"
         android:layout_alignLeft="@id/food_img"
-        android:gravity="center"/>
+        android:layout_alignRight="@id/food_img"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:text="@string/food" />
 
 </RelativeLayout>

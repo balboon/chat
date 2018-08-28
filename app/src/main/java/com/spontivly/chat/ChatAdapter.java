@@ -81,7 +81,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         int image = currentItem.getImageResource();
         return image;
     }
-
+  
     public EventChatItem getEventChatItem(int position) {
         return mEventChatList.get(position);
     }
@@ -91,5 +91,4 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         this.mEventChatList = newEventChatItems;
         this.notifyDataSetChanged();
     }
-
 }

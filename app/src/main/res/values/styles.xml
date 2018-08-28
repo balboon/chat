@@ -10,6 +10,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
     </style>
 
     <style name="ToolBarTheme" parent="ThemeOverlay.AppCompat.Light">
@@ -21,5 +22,10 @@
     <style name="MyPopupTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/black</item>
+    </style>
+
+    <style name="SpontivlyTheme.Launcher">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@layout/launch_screen</item>
     </style>
 </resources>

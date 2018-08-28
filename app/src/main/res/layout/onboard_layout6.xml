@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/onboard_layout2"
+    tools:ignore="ContentDescription"
+    android:id="@+id/onboard_layout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -48,11 +49,11 @@
         android:id="@+id/gender_text"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="@string/onboarding_gender"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/birthday_text"
-        android:inputType="textAutoComplete"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:hint="@string/onboarding_gender"
+        android:inputType="textAutoComplete" />
 
     <Button
         android:id="@+id/finish_button"
